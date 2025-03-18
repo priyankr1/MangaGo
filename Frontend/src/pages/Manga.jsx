@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 const Manga = () => {
   const { id } = useParams();
   const navigate=useNavigate()
-  const { mangas, backendUrl , token ,userData  , mangaMarked } = useContext(AppContext);
+  const { mangas, backendUrl , token ,userData  , mangaMarked ,getBookedManga} = useContext(AppContext);
   const [manga, setManga] = useState(null);
   const [pages, setPages] = useState([])
   const [bookMark,setBookMark]= useState(true)
@@ -21,6 +21,15 @@ const Manga = () => {
       const foundManga = mangas.find((m) => m._id === id);
       console.log("Found Manga:", foundManga.seasons);
       setManga(foundManga || null);
+      if(mangaMarked.length>0){
+        mangaMarked.map((item)=>{
+            if(item.mangaId===id){
+                setBookMark(item.mark)
+            }else{
+              setBookMark(true)
+            }
+        })
+      }
     }
   }
   const seasonPage = (secName, page) => {
@@ -50,7 +59,8 @@ const Manga = () => {
             const markedData={
               userId:userData._id,
               mangaId:id,
-              mangaData:manga
+              mangaData:manga,
+              mark:false
             }
             const {data} =await axios.post(`${backendUrl}/api/user/book-mark`,markedData,{headers:{token:token}})
             if(data.success){
@@ -70,7 +80,11 @@ const Manga = () => {
 }
   useEffect(() => {
     foundManga();
-  }, [id, mangas]);
+  }, [id, mangas ,bookMark]);
+
+   useEffect(() => {
+        getBookedManga();
+    }, [userData,id]);
   
   if (!manga) {
     return <p className="text-2xl">Loading...</p>;

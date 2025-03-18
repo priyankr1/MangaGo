@@ -17,7 +17,7 @@ const bookmarkedSchema = new mongoose.Schema({
   },
   mark: {
     type: Boolean,
-    default:false,
+    default:true,
     required: true
   }
 }

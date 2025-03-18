@@ -62,6 +62,26 @@ const AppContextProvider = (props) => {
         await getManga(); // Fetch fresh data
     };
 
+      const getBookedManga = async () => {
+        try {
+          if (userData) {
+            const userId = userData._id;
+            const { data } = await axios.get(`${backendUrl}/api/user/booked-manga`, { params: { userId }, headers: { token } })
+    
+            if (data.success) {
+              setMangaMarked(data.mangaData);
+              console.log(data);
+            } else {
+              console.log(data.message);
+              toast.error(data.message);
+            }
+          }
+        } catch (error) {
+          console.log(error.message);
+          toast.error(error.message);
+        }
+      };
+
 
     // Fetch user data when token changes
     useEffect(() => {
@@ -82,7 +102,8 @@ const AppContextProvider = (props) => {
         mangas,
         refreshMangas,
         getManga,
-        mangaMarked, setMangaMarked
+        mangaMarked, setMangaMarked,
+        getBookedManga
     };
 
     return <AppContext.Provider value={value}>{props.children}</AppContext.Provider>;

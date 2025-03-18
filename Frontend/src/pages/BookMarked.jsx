@@ -7,29 +7,8 @@ import { assets } from '../assets/assets';
 
 const BookMarked = () => {
 
-  const { userData, backendUrl, token,mangaMarked, setMangaMarked} = useContext(AppContext);
+  const { userData, backendUrl, token,mangaMarked,getBookedManga} = useContext(AppContext);
   const navigate = useNavigate();
-  
-
-  const getBookedManga = async () => {
-    try {
-      if (userData) {
-        const userId = userData._id;
-        const { data } = await axios.get(`${backendUrl}/api/user/booked-manga`, { params: { userId }, headers: { token } })
-
-        if (data.success) {
-          setMangaMarked(data.mangaData);
-          console.log(data);
-        } else {
-          console.log(data.message);
-          toast.error(data.message);
-        }
-      }
-    } catch (error) {
-      console.log(error.message);
-      toast.error(error.message);
-    }
-  };
 
   const removeMarkedManga = async(id)=>{
     try {
@@ -55,7 +34,7 @@ const BookMarked = () => {
 
   return (
     <div className='flex items-center sm:items-center justify-center  sm:justify-center pb-20 pt-10'>
-      <div className="w-full sm:w-3/4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-4 gap-y-6 pl-13 sm:pl-0 ">
+      <div className="w-full sm:w-3/4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-4 gap-y-6  sm:pl-0 ">
       {
         mangaMarked?
         mangaMarked.map((item, index) => (
