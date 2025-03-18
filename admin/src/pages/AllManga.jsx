@@ -44,11 +44,11 @@ function AllManga() {
     applyfilter();
   }, [mangas, type]);
   return (
-    <div className="pl-10 pb-10">
-      <div className=" flex flex-col sm:flex-row justify-between  w-[70vw]">
+    <div className="pt-10 pl-10 h-[100vh]">
+      <div className=" flex flex-col sm:flex-row gap-20  w-[75vw]">
         <p className="text-gray-600 ">Browse through the manga Genres.</p>
         <input
-          className="border-2 rounded-2xl w-medium sm:w-lg h-[30px] text-sm  text-center"
+          className="border-2 rounded-2xl w-medium sm:w-medium h-[30px] text-sm  text-center"
           placeholder="Search"
           type="search"
           onChange={applySearch}
@@ -115,10 +115,10 @@ function AllManga() {
                 navigate(`/mangas/${item._id}`);
                 scroll(0, 0);
               }}
-              className="bg-white rounded-lg shadow-md border-none p-4 flex flex-col items-center w-65 overflow-hidden cursor-pointer hover:translate-y-[-10px] transition-all duration-500"
+              className="bg-white rounded-lg shadow-md border-none p-4 flex flex-col items-center w-50 overflow-hidden cursor-pointer hover:translate-y-[-10px] transition-all duration-500"
             >
               <img
-                className="w-50 h-60 object-cover  rounded-lg"
+                className="w-40 h-50 object-cover  rounded-lg"
                 src={item.banner}
                 alt={item.name}
               />

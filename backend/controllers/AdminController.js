@@ -25,22 +25,7 @@ const loginAdmin = async (req, res) => {
     return res.json({ success: false, message: error.message });
   }
 };
-// const uploadToCloudinary = async (file, folder) => {
-//     try {
-//         const result = await cloudinary.uploader.upload_stream(
-//             { folder },
-//             (error, uploadedFile) => {
-//                 if (error) throw new Error("Image upload failed");
-//                 return uploadedFile.secure_url;
-//             }
-//         ).end(file.buffer);
 
-//         return result;
-//     } catch (error) {
-//         console.error("Cloudinary upload error:", error);
-//         throw error;
-//     }
-// };
 const addManga = async (req, res) => {
     try {
         console.log("add manga");
@@ -72,7 +57,7 @@ const addManga = async (req, res) => {
             ? await uploadToCloudinary(bannerFile.buffer, "manga_banners")
             : null;
 
-        // ✅ FIX: Map images correctly under their respective seasons
+       
         await Promise.all(
             seasons.map(async (season, index) => {
                 const seasonImagesKey = `season_images_${index}`;
@@ -95,7 +80,7 @@ const addManga = async (req, res) => {
             type,
             releasedOn,
             banner: bannerUrl,
-            seasons, // ✅ Parsed and processed seasons
+            seasons, 
         });
         await newManga.save();
 
@@ -113,11 +98,83 @@ const addManga = async (req, res) => {
 const getManga = async (req, res) => {
   try {
     const mangas = await Manga.find();
-    res.status(200).json(mangas);
+    res.status(200).json({success:true,mangas});
   } catch (error) {
     console.error("Error fetching manga:", error);
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({success:false, error: "Server error" });
   }
 };
 
-export { loginAdmin, getManga, addManga };
+const updateManga = async (req, res) => {
+  try {
+    const { id, seasons } = req.body;
+    const parsedSeasons = seasons ? JSON.parse(seasons) : [];
+
+    const manga = await Manga.findById(id);
+    if (!manga) return res.json({ success: false, message: "Manga not found" });
+
+    // Cloudinary upload helper
+    const uploadToCloudinary = (fileBuffer, folder) => {
+      return new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          { folder, resource_type: "image" },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result.secure_url);
+          }
+        );
+        uploadStream.end(fileBuffer);
+      });
+    };
+
+    // 1️⃣ Update Banner (if provided)
+    const bannerFile = req.files?.banner?.[0] || null;
+    if (bannerFile) {
+      const bannerUrl = await uploadToCloudinary(bannerFile.buffer, "manga_banners");
+      manga.banner = bannerUrl;
+    }
+
+    // 2️⃣ Add New Seasons
+    for (let i = 0; i < parsedSeasons.length; i++) {
+      const season = parsedSeasons[i];
+      const key = `season_images_${i}`;
+      let pages = [];
+
+      // Upload images if any
+      if (req.files[key]) {
+        pages = await Promise.all(
+          req.files[key].map(async (file) => ({
+            image_url: await uploadToCloudinary(file.buffer, "manga_seasons"),
+          }))
+        );
+      }
+
+      // Push new season with images
+      manga.seasons.push({
+        season_name: season.season_name,
+        pages,
+      });
+    }
+
+    await manga.save();
+
+    return res.json({ success: true, message: "Manga updated successfully" });
+
+  } catch (error) {
+    console.error(error.message);
+    return res.json({ success: false, message: error.message });
+  }
+};
+const deleteManga =async (req,res) =>{
+  try {
+    const {id} =req.body
+    await Manga.findByIdAndDelete(id)
+    return res.json({success:true,message:"manga Deleted"})
+  } catch (error) {
+    console.log(error.message);
+    return res.json({success:false,message:error.message})
+  }
+}
+
+
+export { loginAdmin, getManga, addManga , updateManga , deleteManga};

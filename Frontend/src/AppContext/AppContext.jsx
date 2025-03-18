@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, use, useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -9,7 +9,13 @@ const AppContextProvider = (props) => {
     
     const [token, setToken] = useState(localStorage.getItem("token") || null);
     const [userData, setUserData] = useState(null);
+    const [mangaMarked, setMangaMarked] = useState([]);
+    const [mangas, setMangas] = useState(() => {
+        const storedMangas = localStorage.getItem('Mangas');
+        return storedMangas ? JSON.parse(storedMangas) : [];
+    });
 
+  
     const loadUserData = async () => { // Accept token as argument
         if (!token) return;
         try {
@@ -37,13 +43,35 @@ const AppContextProvider = (props) => {
         }
     };
 
+    const getManga=async()=>{
+     try {
+       const {data}= await axios.get(`${backendUrl}/api/admin/all-manga`)
+       if(data.success){
+        setMangas(data.mangas)
+        localStorage.setItem('mangas', JSON.stringify(data.mangas)); 
+       }else{
+        toast.error(data.message)
+       }
+       
+     } catch (error) {
+        toast.error(error.message)
+     }
+    }
+    const refreshMangas = async () => {
+        localStorage.removeItem('mangas'); // Clear localStorage
+        await getManga(); // Fetch fresh data
+    };
+
+
     // Fetch user data when token changes
     useEffect(() => {
         if (token) {
             loadUserData();
         }
     }, [token]); 
-
+    useEffect(()=>{
+        getManga()
+    },[])
     const value = {
         backendUrl,
         token,
@@ -51,6 +79,10 @@ const AppContextProvider = (props) => {
         userData,
         setUserData,
         loadUserData,
+        mangas,
+        refreshMangas,
+        getManga,
+        mangaMarked, setMangaMarked
     };
 
     return <AppContext.Provider value={value}>{props.children}</AppContext.Provider>;

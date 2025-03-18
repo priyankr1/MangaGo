@@ -12,7 +12,7 @@ import read5_img from './book3.webp'
 import read6_img from './book4.webp'
 import read7_img from './book5.webp'
 import footer_img from './footer.webp'
-import footer_icon from './footer_icon.webp'
+import footer_icon from './Footer_icon.webp'
 import dropdown_icon from './dropdown_icon.svg'
 import arrow_icon from './arrow_icon.svg'
 import bleach from './Bleach.jpg'
@@ -24,6 +24,8 @@ import blue_lock from'./Blue-lock.jpg'
 import haikyuu from './haikyuu.jpg'
 import sezume from './sezume_img.jpg'
 import Aot from './Aot.jpg'
+import book_marked from './bookmark.png'
+import cancel_icon from './cancel_icon.svg'
 export const assets={
  assest_heroimg,
  assest_icon,
@@ -35,7 +37,9 @@ export const assets={
  footer_icon,
  dropdown_icon,
  arrow_icon,
- upload_icon
+ upload_icon,
+ book_marked,
+ cancel_icon
 }
 export const mangas=[
             {

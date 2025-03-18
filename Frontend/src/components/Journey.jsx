@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { mangas } from '../assets/assets';
 import { Link, useNavigate } from 'react-router-dom';
+import { AppContext } from '../AppContext/AppContext';
 
 const Journey = () => {
+  const {mangas}=useContext(AppContext)
   const navigate =useNavigate()
-  return (
+
+  return(
     <div className="bg-[#fafbfe] flex items-center justify-center py-16">
       <div className="flex flex-col w-[80%]">
         
@@ -19,20 +22,23 @@ const Journey = () => {
 
         {/* Manga Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 py-10">
-          {mangas.slice(3,8).map((item, index) => (
-            <div onClick={()=>{navigate(`/mangas/${item._id}`);scrollTo(0,0)}} key={index} className="flex flex-col items-center  gap-5 ">
-              <img 
-              src={item.img} 
-                alt={item.heading} 
-                className="w-[180px] h-[250px] object-cover rounded-lg shadow-md transition-all duration-300 hover:scale-105 hover:shadow-lg"
-              />
-              <div>
-              <p className="text-gray-500 text-lg font-m mt-2">{item.heading}</p>
-              <p className="text-gray-400 text-m">Read More</p>
-              </div>
-             
-            </div>
-          ))}
+        {mangas?.length > 0 ? (
+  mangas.slice(3, 8).map((item, index) => (
+    <div onClick={() => { navigate(`/mangas/${item._id}`); scrollTo(0, 0); }} key={index} className="flex flex-col items-center gap-5">
+      <img 
+        src={item.banner} 
+        alt={item.name} 
+        className="w-[180px] h-[250px] object-cover rounded-lg shadow-md transition-all duration-300 hover:scale-105 hover:shadow-lg"
+      />
+      <div>
+        <p className="text-gray-500 text-lg font-m mt-2">{item.name}</p>
+        <p className="text-gray-400 text-m">Read More</p>
+      </div>
+    </div>
+  ))
+) : (
+  <p className="text-gray-500 text-lg">Loading...</p> // Show loading state if mangas is empty
+)}
         </div>
 
         {/* Button Section */}

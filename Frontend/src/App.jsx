@@ -27,6 +27,7 @@ const App = () => {
       <Route path='/book-marked' element={<BookMarked/>}  />
       <Route path='/mangas/:id' element={<Manga/>}  />
       <Route path='/my-profile' element={<Profile/>}/>
+      
     </Routes>
     <Footer/>
      </div>

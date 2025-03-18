@@ -75,7 +75,7 @@ const AddManga = () => {
             const response = await axios.post(`${backendUrl}/api/admin/add-manga`, formData, {
                 headers: { 
                     "Content-Type": "multipart/form-data",
-                    Authorization: `Bearer ${aToken}`,
+                    atoken:aToken
                 },
             });
             if (response.data.success) {

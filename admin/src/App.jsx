@@ -7,6 +7,8 @@ import AddManga from './pages/AddManga'
 import { AppContext } from './AppContext/AppContext'
 import Login from './pages/Login'
 import { ToastContainer } from 'react-toastify'
+import AllManga from './pages/AllManga'
+import UpdateManga from './pages/UpdateManga'
 
 const  App=() =>{
   const {aToken}=useContext(AppContext)
@@ -15,12 +17,16 @@ const  App=() =>{
     <div className=''>
     <ToastContainer/>
      <NavBar/>
-        <div className='flex items-center h-auto'>
+        <div className='flex items-center'>
           <Sidebar/>
           <Routes>
           <Route path='/' element={<></>}/>
           <Route path='/admin-Dashbord' element={<Dashbord/>}  />
           <Route path='/add-manga' element={<AddManga/>}  />
+          <Route path='/all_manga' element={<AllManga/>} />
+          <Route path='/all-manga/:type' element={<AllManga/>}  />
+          <Route path='/mangas/:id' element={<UpdateManga/>}  />
+
           </Routes>
         </div>
     </div>

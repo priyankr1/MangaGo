@@ -1,14 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { mangas } from '../assets/assets';
 import { Link, useNavigate } from 'react-router-dom';
+import { AppContext } from '../AppContext/AppContext';
 
-const RelatedManga = ({ id, type }) => {
+const RelatedManga = ({ id, type,setIsTrue,setPages }) => {
     const navigate=useNavigate()
+    const{mangas}=useContext(AppContext)
   const [manga, setManga] = useState([]);
 
+  const foundManga=()=>{
+    if(mangas.length>0){
+      const foundManga = mangas.filter((manga) => manga.type === type && manga._id !== id);
+      setManga(foundManga);
+    }
+   
+  }
   useEffect(() => {
-    const foundManga = mangas.filter((manga) => manga.type === type && manga._id !== id);
-    setManga(foundManga);
+    if(mangas){
+      foundManga()
+    }else{
+      return <p>Loading....</p>
+    }
   }, [id, type]);
 
   return (
@@ -24,13 +36,13 @@ const RelatedManga = ({ id, type }) => {
         {manga.map((item, index) => (
           <div
             key={index}
-            onClick={()=>{ navigate(`/mangas/${item._id}`);scroll(0,0)}}
+            onClick={()=>{setIsTrue(false);setPages([]); navigate(`/mangas/${item._id}`);scroll(0,0)}}
             className="bg-white rounded-lg shadow-md border-none p-4 flex flex-col items-center w-72 transition-transform hover:scale-105"
           >
-            <img className="w-50 h-60 object-cover rounded-lg" src={item.img} alt={item.heading} />
+            <img className="w-50 h-60 object-cover rounded-lg" src={item.banner} alt={item.name} />
             <div className="text-center mt-4">
-              <h2 className="break-words text-[#2b282a] whitespace-pre-wrap font-risque max-w-full max-h-m bg-none  font-m  text-[10px] sm:text-[20px] leading-[108.333%] ">{item.heading}</h2>
-              <p className="text-gray-500 text-[14px]">{item.text}</p>
+              <h2 className="break-words text-[#2b282a] whitespace-pre-wrap font-risque max-w-full max-h-m bg-none  font-m  text-[10px] sm:text-[20px] leading-[108.333%] ">{item.name}</h2>
+              <p className="text-gray-500 text-[14px]">{item.about}</p>
             </div>
           </div>
         ))}

@@ -18,6 +18,6 @@ a {
   @apply block;
 }
 
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
   @apply hidden;
-}
+} */
