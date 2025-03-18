@@ -8,8 +8,6 @@ import { assets } from '../assets/assets';
 const BookMarked = () => {
 
   const { userData, backendUrl, token,mangaMarked, setMangaMarked} = useContext(AppContext);
-
-  
   const navigate = useNavigate();
   
 
@@ -53,6 +51,7 @@ const BookMarked = () => {
       getBookedManga();
     }
   }, [userData]);
+  
 
   return (
     <div className='flex items-center sm:items-center justify-center  sm:justify-center pb-20 pt-10'>

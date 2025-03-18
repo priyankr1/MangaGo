@@ -19,7 +19,8 @@ const userSchema = new mongoose.Schema({
     type:String,
   },
   address:{
-    type:Object
+    type:Object,
+    default:{line1:'',line2:''}
   },
   password:{
     type:String,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FaInfoCircle } from "react-icons/fa";
 import RelatedManga from "../components/RelatedManga";
 import { AppContext } from "../AppContext/AppContext";
@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 
 const Manga = () => {
   const { id } = useParams();
+  const navigate=useNavigate()
   const { mangas, backendUrl , token ,userData  , mangaMarked } = useContext(AppContext);
   const [manga, setManga] = useState(null);
   const [pages, setPages] = useState([])
@@ -23,39 +24,50 @@ const Manga = () => {
     }
   }
   const seasonPage = (secName, page) => {
-    console.log(secName);
-    if (isTrue && prevSec === secName) {
-      setIsTrue(false);
-      setPages([]);
-      setPrevSec("");
-      return;
+    if(token){
+      console.log(secName);
+      if (isTrue && prevSec === secName) {
+        setIsTrue(false);
+        setPages([]);
+        setPrevSec("");
+        return;
+      }
+      setPrevSec(secName);
+      setPages(page)
+      setIsTrue(true);
     }
-    setPrevSec(secName);
-    setPages(page)
-    setIsTrue(true);
+    else{
+      navigate('/login')
+      toast.error("Login to read the manga")
+    }
+   
   };
 
   const mangaMark = async()=>{
-    console.log("hello bhai")
-    try {
-      if(userData){
-          const markedData={
-            userId:userData._id,
-            mangaId:id,
-            mangaData:manga
-          }
-          const {data} =await axios.post(`${backendUrl}/api/user/book-mark`,markedData,{headers:{token:token}})
-          if(data.success){
-            toast.success(data.message)
-            setBookMark(false)
-          }else{
-            toast.error(data.message)
-          }
+    if(token){
+      try {
+        if(userData){
+            const markedData={
+              userId:userData._id,
+              mangaId:id,
+              mangaData:manga
+            }
+            const {data} =await axios.post(`${backendUrl}/api/user/book-mark`,markedData,{headers:{token:token}})
+            if(data.success){
+              toast.success(data.message)
+              setBookMark(false)
+            }else{
+              toast.error(data.message)
+            }
+        }
+      } catch (error) {
+       toast.error(error.message) 
       }
-    } catch (error) {
-     toast.error(error.message) 
-    }
+    }else{
+      navigate('/login')
+      toast.error("Login to Book Mark the manga")
   }
+}
   useEffect(() => {
     foundManga();
   }, [id, mangas]);
