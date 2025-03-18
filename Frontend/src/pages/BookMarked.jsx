@@ -12,7 +12,7 @@ const BookMarked = () => {
 
   const removeMarkedManga = async(id)=>{
     try {
-        const {data}= await axios.post(`${backendUrl}/api/user/delete-marked`,{id},{headers:{token:token}})
+        const {data}= await axios.post(`${backendUrl}/api/user/delete-marked`,{id,userId:userData?._id},{headers:{token:token}})
         if(data.success){
           toast.success(data.message)
           getBookedManga()
@@ -42,7 +42,7 @@ const BookMarked = () => {
           <img className=' cursor-pointer' onClick={()=>{removeMarkedManga(item._id)}} src={assets.cancel_icon} alt="" />
           <div 
             onClick={() => {
-              navigate(`/mangas/${item.mangaId}`);
+              navigate(`/mangas/${item._id}`);
               scroll(0, 0);
             }}
             className="bg-white w-65 rounded-lg shadow-md border-none p-4 flex flex-col items-center  overflow-hidden cursor-pointer hover:translate-y-[-10px] transition-all duration-500"
@@ -50,15 +50,15 @@ const BookMarked = () => {
            
             <img
               className="w-50 h-60 object-cover rounded-lg"
-              src={item.mangaData.banner}
-              alt={item.mangaData.name}
+              src={item?.banner}
+              alt={item?.name}
             />
             <div className="text-center mt-4">
               <h2 className="break-words text-[#2b282a] whitespace-pre-wrap font-risque max-w-full font-m text-[15px] sm:text-[20px] leading-[108.333%]">
-                {item.mangaData.name}
+                {item?.name}
               </h2>
               <p className="text-gray-500 text-[10px] sm:text-[14px]">
-                {item.mangaData.about}
+                {item?.about}
               </p>
             </div>
           </div>

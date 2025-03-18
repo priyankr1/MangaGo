@@ -6,7 +6,7 @@ export const AppContext = createContext();
 
 const AppContextProvider = (props) => {
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
-    
+
     const [token, setToken] = useState(localStorage.getItem("token") || null);
     const [userData, setUserData] = useState(null);
     const [mangaMarked, setMangaMarked] = useState([]);
@@ -15,12 +15,12 @@ const AppContextProvider = (props) => {
         return storedMangas ? JSON.parse(storedMangas) : [];
     });
 
-  
+
     const loadUserData = async () => { // Accept token as argument
         if (!token) return;
         try {
             const { data } = await axios.get(`${backendUrl}/api/user/profile`, {
-                headers: { token}  // Use currentToken instead of outdated token
+                headers: { token }  // Use currentToken instead of outdated token
             });
             if (data.success) {
                 setUserData(data.userData);
@@ -43,44 +43,44 @@ const AppContextProvider = (props) => {
         }
     };
 
-    const getManga=async()=>{
-     try {
-       const {data}= await axios.get(`${backendUrl}/api/admin/all-manga`)
-       if(data.success){
-        setMangas(data.mangas)
-        localStorage.setItem('mangas', JSON.stringify(data.mangas)); 
-       }else{
-        toast.error(data.message)
-       }
-       
-     } catch (error) {
-        toast.error(error.message)
-     }
+    const getManga = async () => {
+        try {
+            const { data } = await axios.get(`${backendUrl}/api/admin/all-manga`)
+            if (data.success) {
+                setMangas(data.mangas)
+                localStorage.setItem('mangas', JSON.stringify(data.mangas));
+            } else {
+                toast.error(data.message)
+            }
+
+        } catch (error) {
+            toast.error(error.message)
+        }
     }
     const refreshMangas = async () => {
         localStorage.removeItem('mangas'); // Clear localStorage
         await getManga(); // Fetch fresh data
     };
 
-      const getBookedManga = async () => {
+    const getBookedManga = async () => {
         try {
-          if (userData) {
-            const userId = userData._id;
-            const { data } = await axios.get(`${backendUrl}/api/user/booked-manga`, { params: { userId }, headers: { token } })
-    
-            if (data.success) {
-              setMangaMarked(data.mangaData);
-              console.log(data);
-            } else {
-              console.log(data.message);
-              toast.error(data.message);
+            if (userData) {
+                const userId = userData._id;
+                const { data } = await axios.get(`${backendUrl}/api/user/booked-manga`, { params: { userId }, headers: { token } })
+                console.log(data.mangaData);
+                if (data.success) {
+                    setMangaMarked(data.mangaData);
+                    console.log(data);
+                } else {
+                    console.log(data.message);
+                    toast.error(data.message);
+                }
             }
-          }
         } catch (error) {
-          console.log(error.message);
-          toast.error(error.message);
+            console.log(error.message);
+            toast.error(error.message);
         }
-      };
+    };
 
 
     // Fetch user data when token changes
@@ -88,10 +88,10 @@ const AppContextProvider = (props) => {
         if (token) {
             loadUserData();
         }
-    }, [token]); 
-    useEffect(()=>{
+    }, [token]);
+    useEffect(() => {
         getManga()
-    },[])
+    }, [])
     const value = {
         backendUrl,
         token,
