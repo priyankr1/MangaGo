@@ -26,6 +26,8 @@ import sezume from './sezume_img.jpg'
 import Aot from './Aot.jpg'
 import book_marked from './bookmark.png'
 import cancel_icon from './cancel_icon.svg'
+import blank_star from './blankStar.png'
+import field_star from  './fieldStar.png'
 export const assets={
  assest_heroimg,
  assest_icon,
@@ -39,7 +41,9 @@ export const assets={
  arrow_icon,
  upload_icon,
  book_marked,
- cancel_icon
+ cancel_icon,
+ blank_star,
+ field_star
 }
 export const mangas=[
             {

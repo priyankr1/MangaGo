@@ -1,5 +1,5 @@
 import React from 'react';
-import{Route, Routes} from "react-router-dom"
+import{Route, Routes, useParams} from "react-router-dom"
 import Navbar from './components/Navbar';
 import {ToastContainer} from 'react-toastify'
 import Manga from './pages/Manga';
@@ -25,7 +25,7 @@ const App = () => {
       <Route path='/about' element={<About/>}  />
       <Route path='/login' element={<Login/>}/>
       <Route path='/book-marked' element={<BookMarked/>}  />
-      <Route path='/mangas/:id' element={<Manga/>}  />
+      <Route path='/mangas/:id' element={<Manga />}  />
       <Route path='/my-profile' element={<Profile/>}/>
       
     </Routes>

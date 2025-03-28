@@ -5,12 +5,14 @@ import { Menu, X } from "lucide-react";
 import { AppContext } from '../AppContext/AppContext';
 
 const Navbar = () => {
-    const {setToken,token,userData}=useContext(AppContext)
+    const {setToken,token,userData,setMangaMarked}=useContext(AppContext)
     const navigate = useNavigate();
     const [menuOpen, setMenuOpen] = useState(false);
     const logout=()=>{
         setToken(false)
         localStorage.removeItem('token')
+        setMangaMarked([])
+        navigate('/')
     }
     return (
         <div className='flex items-center justify-between px-0 sm:px-20 pt-4 text-sm mb-5 bg-transparent h-15'>
@@ -72,11 +74,17 @@ const Navbar = () => {
                     <button className="absolute top-5 right-6" onClick={() => setMenuOpen(false)}>
                         <X size={28} />
                     </button>
-                    <NavLink to="/login" onClick={() => setMenuOpen(false)} className="text-lg">Create Account</NavLink>
-                    <NavLink to="/" onClick={() => setMenuOpen(false)} className="text-lg">HOME</NavLink>
-                    <NavLink to="/all-manga" onClick={() => setMenuOpen(false)} className="text-lg">ALL MANGA</NavLink>
-                    <NavLink to="/book-marked" onClick={() => setMenuOpen(false)} className="text-lg">BOOK MARKED</NavLink>
-                    <NavLink to="/about" onClick={() => setMenuOpen(false)} className="text-lg">ABOUT</NavLink>
+                    {
+                        token?
+                        <NavLink to="/" onClick={() =>{logout();setMenuOpen(false)} } className="text-lg cursor-pointer">LOGOUT</NavLink>:
+                        <NavLink to="/login" onClick={() => setMenuOpen(false)} className="text-lg cursor-pointer">Create Account</NavLink>
+                        
+
+                    }
+                    <NavLink to="/" onClick={() => setMenuOpen(false)} className="text-lg cursor-pointer">HOME</NavLink>
+                    <NavLink to="/all-manga" onClick={() => setMenuOpen(false)} className="text-lg cursor-pointer">ALL MANGA</NavLink>
+                    <NavLink to="/book-marked" onClick={() => setMenuOpen(false)} className="text-lg cursor-pointer">BOOK MARKED</NavLink>
+                    <NavLink to="/about" onClick={() => setMenuOpen(false)} className="text-lg cursor-pointer">ABOUT</NavLink>
                 </div>
             )}
         </div>
