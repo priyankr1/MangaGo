@@ -8,22 +8,26 @@ const AppContextProvider = (props) => {
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
     const [token, setToken] = useState(localStorage.getItem("token") || null);
-    const [userData, setUserData] = useState(null);
+    const [userData, setUserData] = useState(()=>{
+        const storedUser = localStorage.getItem('user');
+        return storedUser ? JSON.parse(storedUser) : null
+    });
     const [mangaMarked, setMangaMarked] = useState([]);
     const [mangas, setMangas] = useState(() => {
-        const storedMangas = localStorage.getItem('Mangas');
+        const storedMangas = localStorage.getItem('mangas');
         return storedMangas ? JSON.parse(storedMangas) : [];
     });
 
 
-    const loadUserData = async () => { // Accept token as argument
+    const loadUserData = async () => {
         if (!token) return;
         try {
             const { data } = await axios.get(`${backendUrl}/api/user/profile`, {
-                headers: { token }  // Use currentToken instead of outdated token
+                headers: { token }  
             });
             if (data.success) {
                 setUserData(data.userData);
+                localStorage.setItem('user', JSON.stringify(data.userData));
             } else {
                 toast.error(data.message);
             }
@@ -57,6 +61,7 @@ const AppContextProvider = (props) => {
             toast.error(error.message)
         }
     }
+
     const refreshMangas = async () => {
         localStorage.removeItem('mangas'); // Clear localStorage
         await getManga(); // Fetch fresh data
@@ -81,8 +86,6 @@ const AppContextProvider = (props) => {
             toast.error(error.message);
         }
     };
-
-
     // Fetch user data when token changes
     useEffect(() => {
         if (token) {

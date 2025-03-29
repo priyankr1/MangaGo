@@ -5,12 +5,13 @@ import { Menu, X } from "lucide-react";
 import { AppContext } from '../AppContext/AppContext';
 
 const Navbar = () => {
-    const {setToken,token,userData,setMangaMarked}=useContext(AppContext)
+    const {setToken,token,userData,setUserData,setMangaMarked}=useContext(AppContext)
     const navigate = useNavigate();
     const [menuOpen, setMenuOpen] = useState(false);
     const logout=()=>{
         setToken(false)
         localStorage.removeItem('token')
+        setUserData(null)
         setMangaMarked([])
         navigate('/')
     }

@@ -1,36 +1,29 @@
 import mongoose from "mongoose";
 
 const mangaSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: [true, "Name is required"],
-        unique: [true, "Book already exists"]
-    },
-    about: {
-        type: String,
-        required: [true, "Description is required"]
-    },
-    banner: {
-        type: String,
-        required: [true, "Banner is required"]
-    },
-    type: {
-        type: String,
-        required: [true, "Type is required"]
-    },
-    releasedOn: {
-        type: String,
-        required: [true, "Released date required"]
-    },
+    name: { type: String, required: true, unique: true },
+    about: { type: String, required: true },
+    banner: { type: String, required: true },
+    type: { type: String, required: true },
+    releasedOn: { type: String, required: true },
     seasons: [
         {
-            season_name: {
-                type: String,
-                required: true
-            },
-            pages: []    
-         }
-    ]
+            season_name: { type: String, required: true },
+            pages: []
+        }
+    ],
+    views: [
+        {
+            userId: String,
+            timestamp: { type: Date, default: Date.now }
+        }
+    ],
+    Publisher:
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "user",
+        },
+      
 });
 
 const Manga = mongoose.model("Manga", mangaSchema);

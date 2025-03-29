@@ -60,4 +60,36 @@ const removeBookMarked = async (req, res) => {
   }
 };
 
-export { bookMarked, getBookMarked, removeBookMarked };
+const addViews = async (req, res) => {
+  try {
+      const { userId, mangaId } = req.body;
+      
+      const manga = await mangaModel.findById(mangaId);
+      if (!manga) {
+          return res.status(404).json({ success: false, message: "Manga not found" });
+      }
+    
+      const now = new Date();
+      const fiveMinutesAgo = new Date(now - 5 * 60 * 1000);
+
+      const lastView = manga.views.find(view => view.userId === userId);
+
+      if (lastView && new Date(lastView.timestamp) > fiveMinutesAgo) {
+          return res.json({ success: true, views: manga.views.length });
+      }
+
+      const updatedManga = await mangaModel.findOneAndUpdate(
+          { _id: mangaId }, 
+          { $push: { views: { userId, timestamp: now } } },
+          { new: true } 
+      );
+
+      return res.json({ success: true, views: updatedManga.views.length });
+
+  } catch (error) {
+      console.error(error.message);
+      return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export { bookMarked, getBookMarked, removeBookMarked,addViews };

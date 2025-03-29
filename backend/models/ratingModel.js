@@ -4,7 +4,7 @@ const ratingSchema = new mongoose.Schema({
     userId: {
         type: String,
         required: true,
-        unique: true  // Ensures only one document per user
+        unique: true  
     },
     ratingDetails: [
         {

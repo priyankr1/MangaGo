@@ -12,13 +12,13 @@ const ReadPage = () => {
                 <h1 className='break-words text-[#2b282a] whitespace-pre-wrap font-risque max-w-full max-h-m bg-none  font-m  text-[40px] sm:text-[50px] leading-[108.333%] pl-10 sm:pl-0'>Immerse Yourself in the Animated World</h1>
             </div>
             <button onClick={()=>{navigate('/all-manga');scrollTo(0,0)}} className='bg-black font-semibold text-sm sm:text-base text-[#c2c0bd] px-8 py-3 rounded-full mt-6 hover:scale-105 active:scale-105 w-m '>All Manga</button>
-            <div className='flex flex-col sm:flex-row items-center justify-center gap-10 py-10'>
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-6 py-10'>
                 {
                     
                     mangas?mangas.slice(0,3).map((item, index) => (
                         <div onClick={() => { navigate(`/mangas/${item._id}`); scrollTo(0,0)} } className="w-100 flex flex-col items-center justify-center gap-10 " key={index}>
                             <img
-                                className=" w-60 h-85 rounded-lg transition-transform duration-300 hover:scale-105"
+                                className=" w-60 h-85  object-cover rounded-lg shadow-md transition-all duration-300 hover:scale-105 hover:shadow-lg"
                                 src={item.banner}
                                 alt="" />
                             <div className='px-10 sm:px-0'>

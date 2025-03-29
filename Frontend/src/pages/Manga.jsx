@@ -18,7 +18,8 @@ const Manga = () => {
   const [rating, setRating] = useState(0);
   const [userRating, setUserRating] = useState(0)
   const [isHovering, setIsHovering] = useState(false);
-  const [totalRating,setTotalRating] = useState()
+  const [totalRating, setTotalRating] = useState()
+  const [views, setViews] = useState()
   const foundManga = () => {
     if (mangas.length > 0) {
       const foundManga = mangas.find((m) => m._id === id);
@@ -131,12 +132,31 @@ const Manga = () => {
       toast.error(error.message);
     }
   }
-
+  const addview = async () => {
+    try {
+      const { data } = await axios.post(`${backendUrl}/api/user/add-views`, {
+        userId: userData._id,
+        mangaId: id
+      }, { headers: { token: token } });
+      console.log( data);
+      if (data.success) {
+        setViews(data.views ? data.views : 0)
+        console.log(data.views)
+      } else {
+        console.log(data.message)
+      }
+    } catch (error) {
+      console.log(error.message);
+      toast.error(error.message)
+    }
+  }
   useEffect(() => {
     if (id) getRating();
   }, [id, userRating]);
 
-
+  useEffect(() => {
+    if (userData) addview()
+  }, [id,userData])
   useEffect(() => {
     if (userData) getUserRating();
   }, [userData])
@@ -193,7 +213,7 @@ const Manga = () => {
               {[...Array(5)].map((_, index) => (
                 <img
                   key={index}
-                  src={assets.blank_star} 
+                  src={assets.blank_star}
                   className="w-6 h-6 cursor-pointer"
                   onClick={() => rateManga(index + 1)}
                 />
@@ -201,6 +221,7 @@ const Manga = () => {
             </div>
           )
           }
+          <h1>{`Views : ${views}`}</h1>
           <h1 className="break-words text-[#2b282a] font-risque max-w-full text-[20px] sm:text-[40px]">
             {manga.name}
           </h1>
