@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { assets } from '../assets/assets';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Menu, X } from "lucide-react"; 
+import { Menu, X } from "lucide-react";
 import { AppContext } from '../AppContext/AppContext';
 
 const Navbar = () => {
-    const {setToken,token,userData,setUserData,setMangaMarked}=useContext(AppContext)
+    const { setToken, token, userData, setUserData, setMangaMarked } = useContext(AppContext)
     const navigate = useNavigate();
     const [menuOpen, setMenuOpen] = useState(false);
-    const logout=()=>{
+    const logout = () => {
         setToken(false)
         localStorage.removeItem('token')
         setUserData(null)
@@ -36,33 +36,38 @@ const Navbar = () => {
                     <li className='py-1 text-gray-500'>BOOK MARKED</li>
                     <hr className='border-none outline-none h-0.5 bg-gray-500 w-3/5 m-auto hidden' />
                 </NavLink>
+                <NavLink to='/creator-access'>
+                    <li className='py-1 text-gray-500'>BECOME A CREATOR</li>
+                    <hr className='border-none outline-none h-0.5 bg-gray-500 w-3/5 m-auto hidden' />
+                </NavLink>
                 <NavLink to='/about'>
                     <li className='py-1 text-gray-500'>ABOUT</li>
                     <hr className='border-none outline-none h-0.5 bg-gray-500 w-3/5 m-auto hidden' />
                 </NavLink>
+
             </ul>
 
             {/* Profile Section (Old Style Restored) */}
             {
-                token&&userData
-                ?  <div className='relative flex items-center gap-4 pr-20 sm:pr-0'>
-                <div className='flex items-center gap-2 cursor-pointer group'>
-                    <img className='w-10 rounded-full' src={userData.image} alt="" />
-                    <img className='w-2.5' src={assets.dropdown_icon} alt="" />
+                token && userData
+                    ? <div className='relative flex items-center gap-4 pr-20 sm:pr-0'>
+                        <div className='flex items-center gap-2 cursor-pointer group'>
+                            <img className='w-10 rounded-full' src={userData.image} alt="" />
+                            <img className='w-2.5' src={assets.dropdown_icon} alt="" />
 
-                    {/* Dropdown Menu */}
-                    <div className='absolute top-0 right-0 pt-14 text-base font-medium text-gray-600 z-20 hidden group-hover:block'>
-                        <div className='min-w-48 bg-stone-100 rounded flex flex-col gap-4 p-4'>
-                            <p onClick={() => navigate('my-profile')} className='hover:text-black cursor-pointer'>My Profile</p>
-                            <p onClick={() => navigate('/book-marked')} className='hover:text-black cursor-pointer'>Book marked</p>
-                            <p onClick={() => logout()} className='hover:text-black cursor-pointer'>Logout</p>
+                            {/* Dropdown Menu */}
+                            <div className='absolute top-0 right-0 pt-14 text-base font-medium text-gray-600 z-20 hidden group-hover:block'>
+                                <div className='min-w-48 bg-white rounded flex flex-col gap-4 p-4'>
+                                    <p onClick={() => navigate('my-profile')} className='hover:text-black cursor-pointer'>My Profile</p>
+                                    <p onClick={() => navigate('/book-marked')} className='hover:text-black cursor-pointer'>Book marked</p>
+                                    <p onClick={() => logout()} className='hover:text-black cursor-pointer'>Logout</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-    :<button onClick={()=>navigate('/login')} className='bg-black text-gray-400 px-8 py-3 rounded-full font-light hidden md:block'>Create Account</button>
+                    : <button onClick={() => navigate('/login')} className='bg-black text-gray-400 px-8 py-3 rounded-full font-light hidden md:block'>Create Account</button>
             }
-          
+
             {/* Mobile Menu Toggle Button */}
             <button className="md:hidden absolute top-7 right-6 z-50" onClick={() => setMenuOpen(!menuOpen)}>
                 {menuOpen ? <X size={28} /> : <Menu size={28} />}
@@ -76,15 +81,16 @@ const Navbar = () => {
                         <X size={28} />
                     </button>
                     {
-                        token?
-                        <NavLink to="/" onClick={() =>{logout();setMenuOpen(false)} } className="text-lg cursor-pointer">LOGOUT</NavLink>:
-                        <NavLink to="/login" onClick={() => setMenuOpen(false)} className="text-lg cursor-pointer">Create Account</NavLink>
-                        
+                        token ?
+                            <NavLink to="/" onClick={() => { logout(); setMenuOpen(false) }} className="text-lg cursor-pointer">LOGOUT</NavLink> :
+                            <NavLink to="/login" onClick={() => setMenuOpen(false)} className="text-lg cursor-pointer">Create Account</NavLink>
+
 
                     }
                     <NavLink to="/" onClick={() => setMenuOpen(false)} className="text-lg cursor-pointer">HOME</NavLink>
                     <NavLink to="/all-manga" onClick={() => setMenuOpen(false)} className="text-lg cursor-pointer">ALL MANGA</NavLink>
                     <NavLink to="/book-marked" onClick={() => setMenuOpen(false)} className="text-lg cursor-pointer">BOOK MARKED</NavLink>
+                    <NavLink to="/creator-access" onClick={() => setMenuOpen(false)} className="text-lg cursor-pointer">BECOME A CREATER</NavLink>
                     <NavLink to="/about" onClick={() => setMenuOpen(false)} className="text-lg cursor-pointer">ABOUT</NavLink>
                 </div>
             )}
